@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../providers/order_provider.dart';
 import '../../widgets/loading_indicator.dart';
@@ -66,6 +67,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Order Details'),
+        leading: Semantics(
+          button: true,
+          label: 'Back button',
+          hint: 'Navigate to previous screen',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              } else {
+                context.go('/products');
+              }
+            },
+          ),
+        ),
       ),
       body: Consumer<OrderProvider>(
         builder: (context, orderProvider, child) {

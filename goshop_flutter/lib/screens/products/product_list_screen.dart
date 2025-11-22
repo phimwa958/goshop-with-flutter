@@ -45,6 +45,21 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Products'),
+        leading: Semantics(
+          button: true,
+          label: 'Back button',
+          hint: 'Navigate to previous screen',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              } else {
+                context.go('/products');
+              }
+            },
+          ),
+        ),
         actions: [
           Semantics(
             button: true,

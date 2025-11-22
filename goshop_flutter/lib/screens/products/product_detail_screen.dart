@@ -54,6 +54,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Details'),
+        leading: Semantics(
+          button: true,
+          label: 'Back button',
+          hint: 'Navigate to previous screen',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              } else {
+                context.go('/products');
+              }
+            },
+          ),
+        ),
       ),
       body: Consumer<ProductProvider>(
         builder: (context, productProvider, child) {
