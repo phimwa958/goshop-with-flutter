@@ -23,6 +23,11 @@ class AuthService {
       await _apiService.setAccessToken(data['access_token']);
     }
 
+    // Save refresh token
+    if (data['refresh_token'] != null) {
+      await _apiService.setRefreshToken(data['refresh_token']);
+    }
+
     if (data['user'] == null) {
       throw Exception('Login failed: No user data returned');
     }
@@ -81,6 +86,30 @@ class AuthService {
   // Logout
   Future<void> logout() async {
     await _apiService.clearAccessToken();
+    await _apiService.clearRefreshToken();
+  }
+
+  // Refresh Token
+  Future<String?> refreshToken() async {
+    final refreshToken = await _apiService.getRefreshToken();
+    if (refreshToken == null) {
+      throw Exception('No refresh token found');
+    }
+
+    final response = await _apiService.post(
+      ApiConfig.refreshToken,
+      {},
+      headers: {'Authorization': 'Bearer $refreshToken'},
+    );
+
+    final data = _apiService.handleResponse(response);
+    
+    if (data['access_token'] != null) {
+      await _apiService.setAccessToken(data['access_token']);
+      return data['access_token'];
+    }
+    
+    return null;
   }
 
   // Check if user is logged in

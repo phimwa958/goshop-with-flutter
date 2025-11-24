@@ -21,6 +21,7 @@ class ApiConfig {
   static const String register = '/auth/register';
   static const String me = '/auth/me';
   static const String changePassword = '/auth/change-password';
+  static const String refreshToken = '/auth/refresh';
   
   static const String products = '/products';
   static String productById(String id) => '/products/$id';
