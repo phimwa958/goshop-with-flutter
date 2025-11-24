@@ -10,10 +10,18 @@ class ProductService {
   Future<Map<String, dynamic>> getProducts({
     int page = 1,
     int limit = 20,
+    String? name,
+    String? code,
+    String? orderBy,
+    bool? orderDesc,
   }) async {
-    final response = await _apiService.get(
-      '${ApiConfig.products}?page=$page&limit=$limit',
-    );
+    var endpoint = '${ApiConfig.products}?page=$page&limit=$limit';
+    if (name != null) endpoint += '&name=$name';
+    if (code != null) endpoint += '&code=$code';
+    if (orderBy != null) endpoint += '&order_by=$orderBy';
+    if (orderDesc != null) endpoint += '&order_desc=$orderDesc';
+
+    final response = await _apiService.get(endpoint);
 
     final data = _apiService.handleResponse(response);
     

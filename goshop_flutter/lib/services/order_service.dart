@@ -12,10 +12,14 @@ class OrderService {
     String? status,
     int page = 1,
     int limit = 20,
+    String? orderBy,
+    bool? orderDesc,
   }) async {
     var endpoint = '${ApiConfig.orders}?page=$page&limit=$limit';
     if (code != null) endpoint += '&code=$code';
     if (status != null) endpoint += '&status=$status';
+    if (orderBy != null) endpoint += '&order_by=$orderBy';
+    if (orderDesc != null) endpoint += '&order_desc=$orderDesc';
 
     final response = await _apiService.get(
       endpoint,
@@ -68,13 +72,14 @@ class OrderService {
   }
 
   // Cancel order
-  Future<void> cancelOrder(String id) async {
+  Future<Order> cancelOrder(String id) async {
     final response = await _apiService.put(
       ApiConfig.cancelOrder(id),
       {},
       requiresAuth: true,
     );
 
-    _apiService.handleResponse(response);
+    final data = _apiService.handleResponse(response);
+    return Order.fromJson(data);
   }
 }
