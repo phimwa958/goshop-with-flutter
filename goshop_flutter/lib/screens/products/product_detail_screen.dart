@@ -69,6 +69,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             },
           ),
         ),
+        actions: [
+          Semantics(
+            button: true,
+            label: 'Edit Product',
+            hint: 'Navigate to edit product screen',
+            child: IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () => context.go('/products/${widget.productId}/edit'),
+            ),
+          ),
+        ],
       ),
       body: Consumer<ProductProvider>(
         builder: (context, productProvider, child) {

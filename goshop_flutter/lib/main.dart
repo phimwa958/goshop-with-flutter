@@ -13,6 +13,7 @@ import 'screens/orders/place_order_screen.dart';
 import 'screens/orders/order_list_screen.dart';
 import 'screens/orders/order_detail_screen.dart';
 import 'screens/profile/profile_screen.dart';
+import 'screens/products/product_form_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -63,10 +64,28 @@ class MyApp extends StatelessWidget {
                 builder: (context, state) => const ProductListScreen(),
               ),
               GoRoute(
+                path: '/products/new',
+                builder: (context, state) => const ProductFormScreen(),
+              ),
+              GoRoute(
                 path: '/products/:id',
                 builder: (context, state) {
                   final id = state.pathParameters['id']!;
                   return ProductDetailScreen(productId: id);
+                },
+              ),
+              GoRoute(
+                path: '/products/:id/edit',
+                builder: (context, state) {
+                  final id = state.pathParameters['id']!;
+                  return ProductFormScreen(productId: id);
+                },
+              ),
+              GoRoute(
+                path: '/products/:id/edit',
+                builder: (context, state) {
+                  final id = state.pathParameters['id']!;
+                  return ProductFormScreen(productId: id);
                 },
               ),
               GoRoute(

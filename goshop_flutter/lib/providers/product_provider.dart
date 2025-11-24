@@ -81,6 +81,63 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
+  // Create product
+  Future<bool> createProduct(String name, String description, double price) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _productService.createProduct(
+        name: name,
+        description: description,
+        price: price,
+      );
+      
+      // Refresh list
+      await fetchProducts();
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // Update product
+  Future<bool> updateProduct(String id, String name, String description, double price) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final updatedProduct = await _productService.updateProduct(
+        id: id,
+        name: name,
+        description: description,
+        price: price,
+      );
+      
+      _selectedProduct = updatedProduct;
+      
+      // Update in list if exists
+      final index = _products.indexWhere((p) => p.id == id);
+      if (index != -1) {
+        _products[index] = updatedProduct;
+      }
+      
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   // Clear selected product
   void clearSelectedProduct() {
     _selectedProduct = null;

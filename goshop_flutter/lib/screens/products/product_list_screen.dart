@@ -214,6 +214,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
           );
         },
       ),
+      floatingActionButton: Semantics(
+        button: true,
+        label: 'Add Product',
+        hint: 'Navigate to create new product screen',
+        child: FloatingActionButton(
+          onPressed: () => context.go('/products/new'),
+          child: const Icon(Icons.add),
+        ),
+      ),
     );
   }
 }
