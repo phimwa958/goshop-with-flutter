@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/order_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/loading_indicator.dart';
 
 class ProductListScreen extends StatefulWidget {
@@ -61,51 +62,86 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ),
         ),
         actions: [
-          Semantics(
-            button: true,
-            label: 'View shopping cart',
-            hint: 'Navigate to shopping cart',
-            child: Consumer<OrderProvider>(
-              builder: (context, orderProvider, child) {
-                return Stack(
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              if (!authProvider.isAuthenticated) {
+                return Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.shopping_cart),
-                      onPressed: () => context.go('/cart'),
+                    TextButton(
+                      onPressed: () => context.go('/login'),
+                      child: const Text('Login'),
                     ),
-                    if (orderProvider.cartItemCount > 0)
-                      Positioned(
-                        right: 8,
-                        top: 8,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            '${orderProvider.cartItemCount}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
+                    TextButton(
+                      onPressed: () => context.go('/register'),
+                      child: const Text('Sign Up'),
+                    ),
                   ],
                 );
-              },
-            ),
-          ),
-          Semantics(
-            button: true,
-            label: 'View profile',
-            hint: 'Navigate to user profile',
-            child: IconButton(
-              icon: const Icon(Icons.person),
-              onPressed: () => context.go('/profile'),
-            ),
+              }
+
+              return Row(
+                children: [
+                  Semantics(
+                    button: true,
+                    label: 'View shopping cart',
+                    hint: 'Navigate to shopping cart',
+                    child: Consumer<OrderProvider>(
+                      builder: (context, orderProvider, child) {
+                        return Stack(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.shopping_cart),
+                              onPressed: () => context.go('/cart'),
+                            ),
+                            if (orderProvider.cartItemCount > 0)
+                              Positioned(
+                                right: 8,
+                                top: 8,
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    '${orderProvider.cartItemCount}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  Semantics(
+                    button: true,
+                    label: 'View profile',
+                    hint: 'Navigate to user profile',
+                    child: IconButton(
+                      icon: const Icon(Icons.person),
+                      onPressed: () => context.go('/profile'),
+                    ),
+                  ),
+                  Semantics(
+                    button: true,
+                    label: 'Logout',
+                    hint: 'Logout from the app',
+                    child: IconButton(
+                      icon: const Icon(Icons.logout),
+                      onPressed: () {
+                        authProvider.logout();
+                        context.go('/products'); // Refresh/Redirect
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
@@ -214,14 +250,20 @@ class _ProductListScreenState extends State<ProductListScreen> {
           );
         },
       ),
-      floatingActionButton: Semantics(
-        button: true,
-        label: 'Add Product',
-        hint: 'Navigate to create new product screen',
-        child: FloatingActionButton(
-          onPressed: () => context.go('/products/new'),
-          child: const Icon(Icons.add),
-        ),
+      floatingActionButton: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          if (!authProvider.isAuthenticated) return const SizedBox.shrink();
+          
+          return Semantics(
+            button: true,
+            label: 'Add Product',
+            hint: 'Navigate to create new product screen',
+            child: FloatingActionButton(
+              onPressed: () => context.go('/products/new'),
+              child: const Icon(Icons.add),
+            ),
+          );
+        },
       ),
     );
   }
