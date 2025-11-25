@@ -30,7 +30,8 @@ A multi-platform e-commerce application built with Flutter, supporting iOS, Andr
 
 1. **Clone the repository**
    ```bash
-   cd goshop_flutter
+   git clone https://github.com/phimwa958/goshop-with-flutter
+   cd goshop-with-flutter/goshop_flutter
    ```
 
 2. **Install dependencies**
